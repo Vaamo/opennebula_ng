@@ -37,3 +37,10 @@ Host *
     UserKnownHostsFile /dev/null
   CONTENT
 end
+
+# Enable and start the web frontend
+service 'opennebula-sunstone' do
+  # Sunstone doesn't support "status", so we need to look for the right thing in the process table
+  pattern 'sunstone-server'
+  action [:enable, :start]
+end
