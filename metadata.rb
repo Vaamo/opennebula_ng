@@ -5,4 +5,4 @@ license          'GNU Public License 3.0'
 description      'Installs/Configures opennebula_ng'
 long_description 'Installs/Configures opennebula_ng'
 version          '0.1.0'
-
+depends          'apt'

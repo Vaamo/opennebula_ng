@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: opennebula_ng
-# Recipe:: default
+# Recipe:: apt_repository
 #
 # Copyright (C) 2014 Chris Aumann
 #
@@ -18,4 +18,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-include_recipe 'opennebula_ng::apt_repository'
+package 'lsb-release'
+
+apt_repository 'opennebula' do
+    case node['platform']
+    when 'debian'
+      # We need the mayor release number (e.g. 7)
+      uri "http://downloads.opennebula.org/repo/Debian/#{node['lsb']['release'].to_i}"
+    when 'ubuntu'
+      uri "http://downloads.opennebula.org/repo/Ubuntu/#{node['lsb']['release']}"
+    else
+      Chef::Log.fatal!("Your platform (#{node['platform']}) is not supported.")
+    end
+
+    distribution 'stable'
+    components %w(opennebula)
+    key 'http://downloads.opennebula.org/repo/Debian/repo.key'
+end
