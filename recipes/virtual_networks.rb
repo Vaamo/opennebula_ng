@@ -34,7 +34,9 @@ node['opennebula_ng']['virtual_networks'].each do |name, config|
     block do
       tempfile.write(%/NAME = "#{name}"\n/)
       config.each do |key, value|
-        tempfile.write(%/#{key.upcase} = "#{value}"\n/)
+        Array(value).each do |v|
+          tempfile.write(%/#{key.upcase} = #{v}\n/)
+        end
       end
       tempfile.close
       Chef::Log.info("Created temporary file with virtual network configuration in #{tempfile.path}")
