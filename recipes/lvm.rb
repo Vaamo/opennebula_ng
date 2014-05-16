@@ -55,3 +55,9 @@ node['opennebula_ng']['lvm']['datastores'].each do |name, config|
     not_if "ONE_AUTH=#{node['opennebula_ng']['one_auth']} onedatastore list --csv |grep -q '#{name}'"
   end
 end
+
+# Only allow physical HDs, because virtual machine PVs
+# provoke "duplicate UUID" errors  when present
+lvm_conf = Chef::Util::FileEdit.new('/etc/lvm/lvm.conf')
+lvm_conf.search_file_replace_line(/^\s*filter/, %\    filter = [ "a|^/dev/hd.*|", "a|^/dev/sd.*|", "r/.*/" ]\)
+lvm_conf.write_file
