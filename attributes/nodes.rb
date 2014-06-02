@@ -23,4 +23,4 @@
 #   nodename: { im: 'kvm', vm: 'kvm', net: 'dummy' }
 #
 # The default is adding the current host, using kvm
-default['opennebula_ng']['nodes'] = { node['hostname'] => {im: 'kvm', vm: 'kvm', net: 'dummy'} }
+default['opennebula_ng']['nodes'] = { node['hostname'] => { im: 'kvm', vm: 'kvm', net: 'dummy' } }

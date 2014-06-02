@@ -20,7 +20,7 @@
 
 node['opennebula_ng']['nodes'].each do |nodename, config|
   # Translate argument hash to "--key value"
-  arguments = config.collect { |key, value| "--#{key} #{value}" }.join(' ')
+  arguments = config.map { |key, value| "--#{key} #{value}" }.join(' ')
 
   execute "onehost create #{nodename} #{arguments}" do
     env 'ONE_AUTH' => node['opennebula_ng']['one_auth']

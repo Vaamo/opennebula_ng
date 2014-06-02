@@ -19,7 +19,6 @@
 #
 require 'tempfile'
 
-
 # Create virtual networks
 node['opennebula_ng']['virtual_networks'].each do |name, config|
   tempfile = Tempfile.new(%w(opennebula .one))
@@ -32,10 +31,10 @@ node['opennebula_ng']['virtual_networks'].each do |name, config|
   # Generate config file
   ruby_block "generate virtual network config file (#{name})" do
     block do
-      tempfile.write(%/NAME = "#{name}"\n/)
+      tempfile.write(%(NAME = "#{name}"\n))
       config.each do |key, value|
         Array(value).each do |v|
-          tempfile.write(%/#{key.upcase} = #{v}\n/)
+          tempfile.write(%(#{key.upcase} = #{v}\n))
         end
       end
       tempfile.close

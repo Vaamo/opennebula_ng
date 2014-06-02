@@ -32,12 +32,11 @@ end
 
 service 'network' do
   # Use ifdown $interface && ifup $interface for each configured interface
-  restart_command node['opennebula_ng']['interfaces'].keys.collect { |interface| "ifdown #{interface} && ifup #{interface}" }.join('; ')
+  restart_command node['opennebula_ng']['interfaces'].keys.map { |interface| "ifdown #{interface} && ifup #{interface}" }.join('; ')
   supports   restart: true
   action     :nothing
   subscribes :restart, 'template[/etc/network/interfaces]'
 end
-
 
 # QEMU configuration
 file '/etc/libvirt/qemu.conf' do
