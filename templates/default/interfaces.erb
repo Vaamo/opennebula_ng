@@ -16,7 +16,7 @@ iface lo inet loopback
 auto <%= interface %>
 iface <%= interface %> <%= config.delete('type') %>
 <% config.each do |key, value| %>
-  <% if key %>
+  <% if key && !value.nil? %>
     <%= key %> <%= value %>
   <% end -%>
 <% end -%>
