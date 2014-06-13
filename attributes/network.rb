@@ -31,5 +31,5 @@ default['opennebula_ng']['interfaces']['br0']['bridge_hello'] = 2
 default['opennebula_ng']['interfaces']['br0']['bridge_maxage'] = 12
 default['opennebula_ng']['interfaces']['br0']['bridge_stp'] = 'off'
 
-default['opennebula_ng']['interfaces']['br0']['dns-nameservers'] = '8.8.8.8'
+default['opennebula_ng']['interfaces']['br0']['dns-nameservers'] = nil
 default['opennebula_ng']['interfaces']['br0']['dns-search'] = nil
