@@ -33,7 +33,8 @@ node['opennebula_ng']['lvm']['datastores'].each do |name, config|
   tempfile = Tempfile.new(%w(opennebula .conf))
 
   execute "onedatastore create #{tempfile.path}" do
-    env 'ONE_AUTH' => node['opennebula_ng']['one_auth']
+    env 'ONE_AUTH' => node['opennebula_ng']['one_auth'],
+        'HOME' => node['opennebula_ng']['one_home']
     action :nothing
   end
 
@@ -51,7 +52,9 @@ node['opennebula_ng']['lvm']['datastores'].each do |name, config|
     notifies :run, "execute[onedatastore create #{tempfile.path}]"
 
     # Do not execute if this datastore is already is existent
-    not_if "ONE_AUTH=#{node['opennebula_ng']['one_auth']} onedatastore list --csv |grep -q '#{name}'"
+    not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']}",
+            "HOME=#{node['opennebula_ng']['one_home']}",
+            "onedatastore list --csv |grep -q '#{name}'"].join(' ')
   end
 end
 
