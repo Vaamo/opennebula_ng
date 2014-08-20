@@ -1,5 +1,6 @@
 # opennebula\_ng-cookbook
 
+A cookbook for managing [OpenNebula](http://opennebula.org/) via the Chef configuration management tool.
 
 ## Supported Platforms
 
