@@ -22,6 +22,6 @@
 #   network_name: {
 #     TYPE: 'fixed',
 #     BRIDGE: 'br0',
-#     LEASES: ['[ IP=192.168.0.100 ]', '[ IP=192.168.0.101 ]']
+#     LEASES: ['[ IP=192.168.1.100 ]', '[ IP=192.168.1.101 ]']
 #   }
 default['opennebula_ng']['virtual_networks'] = {}
