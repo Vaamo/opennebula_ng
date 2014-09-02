@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-
 package 'nfs-common'
 
 mount '/var/lib/one' do

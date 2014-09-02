@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-
 package 'opennebula-node'
 package 'bridge-utils'
 
