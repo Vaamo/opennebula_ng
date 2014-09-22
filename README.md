@@ -102,6 +102,26 @@ node['opennebula_ng']['interfaces']['br1']['bridge_maxage'] = 12
 node['opennebula_ng']['interfaces']['br1']['bridge_stp'] = 'off'
 ```
 
+### mysql\_server
+
+Configures OpenNebula to use a MySQL backend.
+You can set the package to install using the following attribute (defaults to `mariadb-server`)
+
+```ruby
+node['opennebula_ng']['mysql']['package'] = 'mysql-server'
+```
+
+Adjust the following attributes in case they are different from the defaults:
+
+```ruby
+# Default mysql database settings
+node['opennebula_ng']['mysql']['server']  = 'localhost'
+node['opennebula_ng']['mysql']['port']    = 0
+node['opennebula_ng']['mysql']['user']    = 'oneadmin'
+node['opennebula_ng']['mysql']['passwd']  = 'oneadmin'
+node['opennebula_ng']['mysql']['db_name'] = 'opennebula'
+```
+
 
 ### register\_nodes
 
