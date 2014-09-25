@@ -1,3 +1,8 @@
+4.8.0
+-----
+
+- Upgrade to OpenNebula 4.8 packages
+
 0.1.0
 -----
 
