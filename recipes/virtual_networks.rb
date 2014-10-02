@@ -43,7 +43,7 @@ node['opennebula_ng']['virtual_networks'].each do |name, config|
 
     notifies :run, "execute[onevnet create #{tempfile.path}]"
 
-    # Do not execute if this datastore is already is existent
+    # Do not execute if this virtual network is already is existent
     not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']}",
             "HOME=#{node['opennebula_ng']['one_home']}",
             "onevnet list --csv |grep -q '#{name}'"].join(' ')
