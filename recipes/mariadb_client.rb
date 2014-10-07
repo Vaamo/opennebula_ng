@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: opennebula_ng
-# Recipe:: mysql_server
+# Recipe:: mariadb_galera
 #
 # Copyright 2014, Vaamo Finanz AG
 #
@@ -17,22 +17,11 @@
 # limitations under the License.
 #
 
-# Install and configure mysql
-include_recipe 'mysqld::default'
-
-# GRANT oneadmin user access to opennebula database
-query = %(GRANT ALL PRIVILEGES ON #{node['opennebula_ng']['mysql']['db_name']}.*
-          TO '#{node['opennebula_ng']['mysql']['user']}'
-          IDENTIFIED BY '#{node['opennebula_ng']['mysql']['passwd']}')
-
-# Use debian.cnf for authentication, run GRANT statement
-execute %(mysql --defaults-file=/etc/mysql/debian.cnf -e "#{query}")
-
 # /etc/one/oned.conf is part of the package "opennebula".
 # Make sure it's installed
 package 'opennebula'
 
-# Configure OpenNebula to use mysql server
+# Configure OpenNebula to use MariaDB
 # Exchange DB = [] configuration in /etc/one/oned.conf with settings in attributes
 #
 # TODO: Somehow the regex doesn't match multiline expressions, even when using /m
