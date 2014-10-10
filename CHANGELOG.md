@@ -1,3 +1,8 @@
+4.8.1
+-----
+
+- Use mariadb galera by default
+
 4.8.0
 -----
 
