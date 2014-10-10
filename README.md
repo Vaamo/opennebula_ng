@@ -102,14 +102,9 @@ node['opennebula_ng']['interfaces']['br1']['bridge_maxage'] = 12
 node['opennebula_ng']['interfaces']['br1']['bridge_stp'] = 'off'
 ```
 
-### mysql\_server
+### mariadb\_server
 
-Configures OpenNebula to use a MySQL backend.
-You can set the package to install using the following attribute (defaults to `mariadb-server`)
-
-```ruby
-node['opennebula_ng']['mysql']['package'] = 'mysql-server'
-```
+Configures OpenNebula to use a MariaDB backend.
 
 Adjust the following attributes in case they are different from the defaults:
 
@@ -121,6 +116,73 @@ node['opennebula_ng']['mysql']['user']    = 'oneadmin'
 node['opennebula_ng']['mysql']['passwd']  = 'oneadmin'
 node['opennebula_ng']['mysql']['db_name'] = 'opennebula'
 ```
+
+Make sure you set a root password (This password will also be used for the `debian-sys-maint` user,
+in case you use Debian/Ubuntu.
+
+```ruby
+node['mysqld']['root_password'] = 'get_me_from_encrypted_data_bag_maybe?'
+```
+
+Set the wsrep ssh auth, for example, use the root user which password we just specified:
+
+```ruby
+node['mysqld']['my.cnf']['mysqld']['wsrep_sst_auth'] = "root:#{node['mysqld']['root_password']}"
+```
+
+In case you have multiple interfaces, you might also want to specify the IP of the interface the
+replication should use
+
+```rubt
+node['mysqld']['my.cnf']['mysqld']['wsrep_node_address'] = 'eth1'
+```
+
+In case you use more than one mariadb galera node, set this attribute to include all galera nodes
+in your cluster
+
+```ruby
+node['mysqld']['my.cnf']['mysqld']['wsrep_cluster_address'] = 'gcomm://node1,node2,node3'
+```
+
+Its recommended to keep one Galera node on each physical cluster (as virtual machines), and then
+default each machine to connect to the one their hosting. This can be done like this:
+
+```ruby
+# Connect to different clusters
+if node.name == 'node1'
+  default['opennebula_ng']['mysql']['server']  = 'galera.node.on.host1'
+elsif node.name == 'node2'
+  default['opennebula_ng']['mysql']['server']  = 'galera.node.on.host2'
+else
+  default['opennebula_ng']['mysql']['server']  = 'galera.node.on.host1'
+end
+```
+
+
+### mariadb\_galera\_init
+
+Use this cookbook if you want to initialize a new clusters first node:
+
+```bash
+sudo chef-client --once -o 'recipe[opennebula_ng::mariadb_galera_init]'
+```
+
+You can also include it (if required) in a `mariadb_galera_init` cookbook in your wrapper cookbook
+
+```ruby
+include_recipe 'opennebula_ng::mariadb_galera_init'
+```
+
+This cookbook just calls `mysqld::mariadb_galera_init`. Having it here is useful, as we set some
+attributes which are not available when calling the mysqld recipe directly.
+
+### mariadb\_client
+
+This recipe configures the `/etc/one/oned.conf` configuration file on the servers to connect to the
+mariadb cluster specified in the arguments from the mariadb\_server recipe.
+
+*Note: If those values are changed, the file is not automatically updated. This is due to a bug with
+multiline regular expressions. See `recipes/mariadb_client.rb` for details*
 
 
 ### register\_nodes
@@ -170,6 +232,8 @@ node['opennebula_ng']['virtual_networks'] = {
 }
 ```
 
+*Note: If you later add more addresses to an existing network, the settings are not automatically
+updated on the nodes. The recipe skips creating a network if the network already exists.*
 
 ### lvm
 
