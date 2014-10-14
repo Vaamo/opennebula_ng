@@ -17,5 +17,3 @@
 # limitations under the License.
 #
 
-default['opennebula_ng']['one_auth'] = '/var/lib/one/.one/one_auth'
-default['opennebula_ng']['one_home'] = '/var/lib/one'

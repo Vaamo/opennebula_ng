@@ -280,15 +280,44 @@ Configures the host to be an NFS client, mouting `/var/lib/one` from the server 
 `node['opennebula_ng']['nfs']['server']`
 
 
-## Other attributes
+### one\_auth
 
-You can configure the location of the "oneadmin" home directory and auth file in case needed.
+Configures the auth tokens in `/var/lib/one/.one`. When using a shared database, but not a shared
+`/var/lib/one/.one` directory, they need to be in sync between all servers.
+
+You can set the shared items using the following attributes:
 
 ```ruby
-node['opennebula_ng']['one_auth'] = '/var/lib/one/.one/one_auth'
-node['opennebula_ng']['one_home'] = '/var/lib/one'
+# Set shared passwords between all opennebula hosts for serveradmin and oneadmin
+node['opennebula_ng']['one_auth']['oneadmin']['password'] = 'password_from_encrypted_data_bag_maybe?'
+node['opennebula_ng']['one_auth']['serveradmin']['password'] = 'another_password'
 ```
 
+You can also set the ssh keypair (as every OpenNebula host needs to be able to connect to the
+others, using the "oneadmin" user).
+
+Hint: You can generate a keypair using the `ssh-keygen` command.
+
+```ruby
+node['opennebula_ng']['one_auth']['oneadmin']['id_rsa'] = "-----BEGIN RSA PRIVATE KEY-----\nMIIE..."
+node['opennebula_ng']['one_auth']['oneadmin']['id_rsa.pub'] = 'ssh-rsa AAAA...'
+```
+
+*NOTE: This recipe assumes that the oneuser has id 0, and serveradmin the id 1. This is the default.
+If you have them set to something else, make sure to adjust the id attributes!*
+
+```ruby
+node['opennebula_ng']['one_auth']['oneadmin']['id'] = 0
+node['opennebula_ng']['one_auth']['serveradmin']['id'] = 1
+```
+
+You can also configure (if needed) the oneadmin's home directory as well as the `one_auth` file that
+will be used:
+
+```ruby
+node['opennebula_ng']['one_auth']['oneadmin']['home'] = '/var/lib/one'
+node['opennebula_ng']['one_auth']['oneadmin']['auth_file'] = '/var/lib/one/.one/one_auth'
+```
 
 ## Notes
 

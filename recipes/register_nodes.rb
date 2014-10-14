@@ -22,12 +22,12 @@ node['opennebula_ng']['nodes'].each do |nodename, config|
   arguments = config.map { |key, value| "--#{key} #{value}" }.join(' ')
 
   execute "onehost create #{nodename} #{arguments}" do
-    env 'ONE_AUTH' => node['opennebula_ng']['one_auth'],
-        'HOME' => node['opennebula_ng']['one_home']
+    env 'ONE_AUTH' => node['opennebula_ng']['one_auth']['oneadmin']['auth_file'],
+        'HOME' => node['opennebula_ng']['one_auth']['oneadmin']['home']
 
     # Do not execute if this node is already is existent
-    not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']}",
-            "HOME=#{node['opennebula_ng']['one_home']}",
+    not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']['oneadmin']['auth_file']}",
+            "HOME=#{node['opennebula_ng']['one_auth']['oneadmin']['home']}",
             "onehost list --csv |grep #{nodename} -q"].join(' ')
   end
 end
