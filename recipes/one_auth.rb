@@ -19,13 +19,18 @@
 
 # Deploy /var/lib/one/.one/ secrets (oneuser password)
 execute 'Set oneuser passwd for serveradmin' do
+  user 'oneadmin'
   command "oneuser passwd #{node['opennebula_ng']['one_auth']['serveradmin']['id']} #{node['opennebula_ng']['one_auth']['serveradmin']['password']}"
   action :nothing
 end
 
+# The password for the user oneadmin needs to be set before we change the one_auth file. Once the
+# one_auth file is changed, it will be used to authenticate when using "oneuser" and will then fail
+# if the password wasn't changed before.
 execute 'Set oneuser passwd for oneadmin' do
+  user 'oneadmin'
   command "oneuser passwd #{node['opennebula_ng']['one_auth']['oneadmin']['id']} #{node['opennebula_ng']['one_auth']['oneadmin']['password']}"
-  action :nothing
+  only_if  { node['opennebula_ng']['one_auth']['oneadmin']['password'] }
 end
 
 %w(ec2_auth occi_auth oneflow_auth onegate_auth sunstone_auth).each do |file|
@@ -44,7 +49,6 @@ file '/var/lib/one/.one/one_auth' do
   user    'oneadmin'
   group   'oneadmin'
   content "oneadmin:#{node['opennebula_ng']['one_auth']['oneadmin']['password']}\n"
-  notifies :run, 'execute[Set oneuser passwd for oneadmin]'
   only_if  { node['opennebula_ng']['one_auth']['oneadmin']['password'] }
 end
 
