@@ -19,7 +19,7 @@
 
 # Default mysql database settings
 default['opennebula_ng']['mysql']['server']  = 'localhost'
-default['opennebula_ng']['mysql']['port']    = 0
+default['opennebula_ng']['mysql']['port']    = 3306
 default['opennebula_ng']['mysql']['user']    = 'oneadmin'
 default['opennebula_ng']['mysql']['passwd']  = 'oneadmin'
 default['opennebula_ng']['mysql']['db_name'] = 'opennebula'
