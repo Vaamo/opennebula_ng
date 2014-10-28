@@ -35,8 +35,15 @@ oned_conf.search_file_replace_line(/^\s*DB\s*=\s*\[.*?\]/m, %(DB = [ backend = "
 ))
 oned_conf.write_file
 
-# Restart oned on config file change
 service 'opennebula' do
-  action :restart
-  only_if { oned_conf.file_edited? }
+  # Disable service by default (on passive nodes)
+  action = :disable
+
+  # Enable service on active nodes, restart service if config file was changed
+  if node['opennebula_ng']['active']
+    action = :enable
+    action = [:enable, :restart] if oned_conf.file_edited?
+  end
+
+  action action
 end

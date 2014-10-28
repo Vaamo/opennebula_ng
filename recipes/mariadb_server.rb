@@ -28,4 +28,6 @@ query = %(GRANT ALL PRIVILEGES ON #{node['opennebula_ng']['mysql']['db_name']}.*
           IDENTIFIED BY '#{node['opennebula_ng']['mysql']['passwd']}')
 
 # Use debian.cnf for authentication, run GRANT statement
-execute %(mysql --defaults-file=/etc/mysql/debian.cnf -e "#{query}")
+if node['opennebula_ng']['active']
+  execute %(mysql --defaults-file=/etc/mysql/debian.cnf -e "#{query}")
+end

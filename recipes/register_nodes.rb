@@ -17,17 +17,19 @@
 # limitations under the License.
 #
 
-node['opennebula_ng']['nodes'].each do |nodename, config|
-  # Translate argument hash to "--key value"
-  arguments = config.map { |key, value| "--#{key} #{value}" }.join(' ')
+if node['opennebula_ng']['active']
+  node['opennebula_ng']['nodes'].each do |nodename, config|
+    # Translate argument hash to "--key value"
+    arguments = config.map { |key, value| "--#{key} #{value}" }.join(' ')
 
-  execute "onehost create #{nodename} #{arguments}" do
-    env 'ONE_AUTH' => node['opennebula_ng']['one_auth']['oneadmin']['auth_file'],
-        'HOME' => node['opennebula_ng']['one_auth']['oneadmin']['home']
+    execute "onehost create #{nodename} #{arguments}" do
+      env 'ONE_AUTH' => node['opennebula_ng']['one_auth']['oneadmin']['auth_file'],
+          'HOME' => node['opennebula_ng']['one_auth']['oneadmin']['home']
 
-    # Do not execute if this node is already is existent
-    not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']['oneadmin']['auth_file']}",
-            "HOME=#{node['opennebula_ng']['one_auth']['oneadmin']['home']}",
-            "onehost list --csv |grep #{nodename} -q"].join(' ')
+      # Do not execute if this node is already is existent
+      not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']['oneadmin']['auth_file']}",
+              "HOME=#{node['opennebula_ng']['one_auth']['oneadmin']['home']}",
+              "onehost list --csv |grep #{nodename} -q"].join(' ')
+    end
   end
 end

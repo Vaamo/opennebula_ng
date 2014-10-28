@@ -29,32 +29,34 @@ group 'disk' do
 end
 
 # Create datastores
-node['opennebula_ng']['lvm']['datastores'].each do |name, config|
-  tempfile = Tempfile.new(%w(opennebula .conf))
+if node['opennebula_ng']['active']
+  node['opennebula_ng']['lvm']['datastores'].each do |name, config|
+    tempfile = Tempfile.new(%w(opennebula .conf))
 
-  execute "onedatastore create #{tempfile.path}" do
-    env 'ONE_AUTH' => node['opennebula_ng']['one_auth']['oneadmin']['auth_file'],
-        'HOME' => node['opennebula_ng']['one_auth']['oneadmin']['home']
-    action :nothing
-  end
-
-  # Generate config file
-  ruby_block "generate datastore config file (#{name})" do
-    block do
-      tempfile.write(%(NAME = "#{name}"\n))
-      config.each do |key, value|
-        tempfile.write(%(#{key.upcase} = "#{value}"\n))
-      end
-      tempfile.close
-      Chef::Log.info("Created temporary file with datastore configuration in #{tempfile.path}")
+    execute "onedatastore create #{tempfile.path}" do
+      env 'ONE_AUTH' => node['opennebula_ng']['one_auth']['oneadmin']['auth_file'],
+          'HOME' => node['opennebula_ng']['one_auth']['oneadmin']['home']
+      action :nothing
     end
 
-    notifies :run, "execute[onedatastore create #{tempfile.path}]"
+    # Generate config file
+    ruby_block "generate datastore config file (#{name})" do
+      block do
+        tempfile.write(%(NAME = "#{name}"\n))
+        config.each do |key, value|
+          tempfile.write(%(#{key.upcase} = "#{value}"\n))
+        end
+        tempfile.close
+        Chef::Log.info("Created temporary file with datastore configuration in #{tempfile.path}")
+      end
 
-    # Do not execute if this datastore is already is existent
-    not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']['oneadmin']['auth_file']}",
-            "HOME=#{node['opennebula_ng']['one_auth']['oneadmin']['home']}",
-            "onedatastore list --csv |grep -q '#{name}'"].join(' ')
+      notifies :run, "execute[onedatastore create #{tempfile.path}]"
+
+      # Do not execute if this datastore is already is existent
+      not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']['oneadmin']['auth_file']}",
+              "HOME=#{node['opennebula_ng']['one_auth']['oneadmin']['home']}",
+              "onedatastore list --csv |grep -q '#{name}'"].join(' ')
+    end
   end
 end
 

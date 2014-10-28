@@ -41,5 +41,12 @@ end
 service 'opennebula-sunstone' do
   # Sunstone doesn't support "status", so we need to look for the right thing in the process table
   pattern 'sunstone-server'
-  action [:enable, :start]
+
+  # Do not automatically enable/start sunstone, as OpenNebula doesn't support active-active
+  # deployments. Only start it on the current master
+  if node['opennebula_ng']['active']
+    action [:enable, :start]
+  else
+    action [:disable]
+  end
 end

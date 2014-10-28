@@ -17,3 +17,6 @@
 # limitations under the License.
 #
 
+# OpenNebula doesn't allow multiple active nodes. Set this to true on your currently active
+# OpenNebula host to automatically enable/start the frontend services (oned, scheduler, sunstone)
+default['opennebula_ng']['active'] = false

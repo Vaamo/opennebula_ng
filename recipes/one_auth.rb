@@ -22,6 +22,7 @@ execute 'Set oneuser passwd for serveradmin' do
   user 'oneadmin'
   command "oneuser passwd #{node['opennebula_ng']['one_auth']['serveradmin']['id']} #{node['opennebula_ng']['one_auth']['serveradmin']['password']}"
   action :nothing
+  only_if { node['opennebula_ng']['active'] }
 end
 
 # The password for the user oneadmin needs to be set before we change the one_auth file. Once the
@@ -30,7 +31,7 @@ end
 execute 'Set oneuser passwd for oneadmin' do
   user 'oneadmin'
   command "oneuser passwd #{node['opennebula_ng']['one_auth']['oneadmin']['id']} #{node['opennebula_ng']['one_auth']['oneadmin']['password']}"
-  only_if  { node['opennebula_ng']['one_auth']['oneadmin']['password'] }
+  only_if  { node['opennebula_ng']['one_auth']['oneadmin']['password'] && node['opennebula_ng']['active'] }
 end
 
 %w(ec2_auth occi_auth oneflow_auth onegate_auth sunstone_auth).each do |file|

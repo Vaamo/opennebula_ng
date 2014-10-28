@@ -19,33 +19,35 @@
 require 'tempfile'
 
 # Create virtual networks
-node['opennebula_ng']['virtual_networks'].each do |name, config|
-  tempfile = Tempfile.new(%w(opennebula .one))
+if node['opennebula_ng']['active']
+  node['opennebula_ng']['virtual_networks'].each do |name, config|
+    tempfile = Tempfile.new(%w(opennebula .one))
 
-  execute "onevnet create #{tempfile.path}" do
-    env 'ONE_AUTH' => node['opennebula_ng']['one_auth']['oneadmin']['auth_file'],
-        'HOME' => node['opennebula_ng']['one_home']
-    action :nothing
-  end
-
-  # Generate config file
-  ruby_block "generate virtual network config file (#{name})" do
-    block do
-      tempfile.write(%(NAME = "#{name}"\n))
-      config.each do |key, value|
-        Array(value).each do |v|
-          tempfile.write(%(#{key.upcase} = #{v}\n))
-        end
-      end
-      tempfile.close
-      Chef::Log.info("Created temporary file with virtual network configuration in #{tempfile.path}")
+    execute "onevnet create #{tempfile.path}" do
+      env 'ONE_AUTH' => node['opennebula_ng']['one_auth']['oneadmin']['auth_file'],
+          'HOME' => node['opennebula_ng']['one_home']
+      action :nothing
     end
 
-    notifies :run, "execute[onevnet create #{tempfile.path}]"
+    # Generate config file
+    ruby_block "generate virtual network config file (#{name})" do
+      block do
+        tempfile.write(%(NAME = "#{name}"\n))
+        config.each do |key, value|
+          Array(value).each do |v|
+            tempfile.write(%(#{key.upcase} = #{v}\n))
+          end
+        end
+        tempfile.close
+        Chef::Log.info("Created temporary file with virtual network configuration in #{tempfile.path}")
+      end
 
-    # Do not execute if this virtual network is already is existent
-    not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']['oneadmin']['auth_file']}",
-            "HOME=#{node['opennebula_ng']['one_home']}",
-            "onevnet list --csv |grep -q '#{name}'"].join(' ')
+      notifies :run, "execute[onevnet create #{tempfile.path}]"
+
+      # Do not execute if this virtual network is already is existent
+      not_if ["ONE_AUTH=#{node['opennebula_ng']['one_auth']['oneadmin']['auth_file']}",
+              "HOME=#{node['opennebula_ng']['one_home']}",
+              "onevnet list --csv |grep -q '#{name}'"].join(' ')
+    end
   end
 end
