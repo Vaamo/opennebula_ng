@@ -1,3 +1,9 @@
+4.8.4
+-----
+
+- Fail hard when not using a valid network configration, instead of deploying an empty
+  /etc/network/interfaces
+
 4.8.3
 -----
 
