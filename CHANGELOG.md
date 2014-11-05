@@ -1,15 +1,20 @@
-4.8.2
+4.8.3
 -----
 
-- Add one\_auth recipe, to set shared passwords for "oneadmin" and "serveradmin" users, as well as
-  deploy ssh keys
 - Add `node['opennebula_ng']['active']` attribute, which defaults to false. On non-active opennebula
   hosts we won't add networks/storage/users and will disable oned, scheduler and sunstone services,
   as OpenNebula is not capable of running as an active-active environment due to caching issues.
 
 Compatibility changes:
-
 - Set `node['opennebula_ng']['active'] = true` on your currently active (master) host
+
+4.8.2
+-----
+
+- Add one\_auth recipe, to set shared passwords for "oneadmin" and "serveradmin" users, as well as
+  deploy ssh keys
+
+Compatibility changes:
 - Renamed `node['opennebula_ng']['one_auth']` attribtue to `node['opennebula_ng']['one_auth']['oneadmin']['auth_file']`
 - Renamed `node['opennebula_ng']['one_home']` attribute to `node['opennebula_ng']['one_auth']['oneadmin']['home']`
 
