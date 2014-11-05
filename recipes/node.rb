@@ -20,6 +20,17 @@
 package 'opennebula-node'
 package 'bridge-utils'
 
+# Fail if no network configuration is found.
+# This is important, as otherwise an empty /etc/network/interfaces would be deployed.
+# I learned it the hard way :(
+if node['opennebula_ng']['interfaces']['br0']['type'] == 'inet static' && node['opennebula_ng']['interfaces']['br0']['address'] == nil
+  Chef::Log.fatal! <<-EOS
+    Network configuration missing!
+    Either set node['opennebula_ng']['interfaces']['br0']['type'] = 'inet dhcp'
+    or configure at least an address in node['opennebula_ng']['interfaces']['br0']['address']
+  EOS
+end
+
 # Network configuration, according to attributes
 template '/etc/network/interfaces' do
   owner 'root'
