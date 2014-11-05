@@ -20,7 +20,7 @@
 # Deploy /var/lib/one/.one/ secrets (oneuser password)
 execute 'Set oneuser passwd for serveradmin' do
   user 'oneadmin'
-  command "oneuser passwd #{node['opennebula_ng']['one_auth']['serveradmin']['id']} #{node['opennebula_ng']['one_auth']['serveradmin']['password']}"
+  command "oneuser passwd #{node['opennebula_ng']['one_auth']['serveradmin']['id']} #{node['opennebula_ng']['one_auth']['serveradmin']['password']} --sha1"
   action :nothing
   only_if { node['opennebula_ng']['active'] }
 end
