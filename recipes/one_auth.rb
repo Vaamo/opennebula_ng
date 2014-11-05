@@ -63,10 +63,12 @@ file '/var/lib/one/.ssh/id_rsa' do
   only_if { node['opennebula_ng']['one_auth']['oneadmin']['id_rsa'] }
 end
 
-file '/var/lib/one/.ssh/authorized_keys' do
-  mode    00644
-  owner   'oneadmin'
-  group   'oneadmin'
-  content "#{node['opennebula_ng']['one_auth']['oneadmin']['id_rsa.pub']}\n"
-  only_if { node['opennebula_ng']['one_auth']['oneadmin']['id_rsa.pub'] }
+%w(/var/lib/one/.ssh/authorized_keys /var/lib/one/.ssh/id_rsa.pub).each do |pubkey_file|
+  file pubkey_file do
+    mode    00644
+    owner   'oneadmin'
+    group   'oneadmin'
+    content "#{node['opennebula_ng']['one_auth']['oneadmin']['id_rsa.pub']}\n"
+    only_if { node['opennebula_ng']['one_auth']['oneadmin']['id_rsa.pub'] }
+  end
 end
