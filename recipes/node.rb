@@ -40,13 +40,17 @@ template '/etc/network/interfaces' do
   variables interfaces: node['opennebula_ng']['interfaces']
 end
 
-service 'network' do
-  # Use ifdown $interface && ifup $interface for each configured interface
-  restart_command node['opennebula_ng']['interfaces'].keys.map { |interface| "ifdown #{interface} && ifup #{interface}" }.join('; ')
-  supports   restart: true
-  action     :nothing
-  subscribes :restart, 'template[/etc/network/interfaces]'
-end
+
+# Do not restart network automatically. This is dangerous on running machines, as it detaches all
+# virtual machines from the bridges.
+#
+# service 'network' do
+#   # Use ifdown $interface && ifup $interface for each configured interface
+#   restart_command node['opennebula_ng']['interfaces'].keys.map { |interface| "ifdown #{interface} && ifup #{interface}" }.join('; ')
+#   supports   restart: true
+#   action     :nothing
+#   subscribes :restart, 'template[/etc/network/interfaces]'
+# end
 
 # QEMU configuration
 file '/etc/libvirt/qemu.conf' do
