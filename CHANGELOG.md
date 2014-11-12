@@ -1,3 +1,12 @@
+4.8.5
+-----
+
+- Support new address range (AR) syntax in `virtual_network` recipe
+- Use --sha1 when changing password for serveradmin
+- Deploy `id_rsa.pub` alongside `id_rsa`
+- Do not automatically restart network configuration. This is problematic, as it cuts off virtual
+  machines from their network bridges.
+
 4.8.4
 -----
 
