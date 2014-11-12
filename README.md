@@ -212,22 +212,28 @@ networks are supported.
 
 ```ruby
 node['opennebula_ng']['virtual_networks'] = {
-  frontnet: {
-    TYPE: 'fixed',
+  frontnet_dualstack: {
     BRIDGE: 'br0',
     GATEWAY: '192.168.1.1',
     NETWORK_MASK: '255.255.255.0',
     NETWORK_ADDRESS: '192.168.1.0',
-    DNS: '"208.67.222.222 208.67.220.220"',
-    LEASES: ['[ IP=192.168.1.100 ]', '[ IP=192.168.1.101 ]']
+    DNS: '208.67.222.222 208.67.220.220',
+    AR: {
+      TYPE: 'IP4_6',
+      IP: '192.168.100.1',
+      GLOBAL_PREFIX: '2a00:abcd:1000:f000::',
+      SIZE: 100,
+    }
   },
-  backnet: {
-    TYPE: 'ranged',
+  backnet_ipv4: {
     BRIDGE: 'br1',
     NETWORK_MASK: '255.255.255.0',
     NETWORK_ADDRESS: '10.0.0.0',
-    IP_START: '10.0.0.100',
-    IP_END: '10.0.0.200',
+    AR: {
+      TYPE: 'IP4',
+      IP: '10.0.0.100',
+      SIZE: 10,
+    }
   },
 }
 ```
