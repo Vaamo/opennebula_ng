@@ -1,3 +1,9 @@
+4.10.0
+------
+
+- Use OpenNebula 4.10 repositories. To upgrade, run `apt-get dist-upgrade` after deploying the
+  cookbook. Make sure you also run the database migrations using `onedb upgrade`.
+
 4.8.5
 -----
 
