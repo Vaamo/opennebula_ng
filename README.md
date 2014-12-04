@@ -223,17 +223,26 @@ node['opennebula_ng']['virtual_networks'] = {
       IP: '192.168.100.1',
       GLOBAL_PREFIX: '2a00:abcd:1000:f000::',
       SIZE: 100,
-    }
+    },
   },
   backnet_ipv4: {
     BRIDGE: 'br1',
     NETWORK_MASK: '255.255.255.0',
     NETWORK_ADDRESS: '10.0.0.0',
-    AR: {
-      TYPE: 'IP4',
-      IP: '10.0.0.100',
-      SIZE: 10,
-    }
+
+    # Multiple address-ranges are also valid
+    AR: [
+      {
+        TYPE: 'IP4',
+        IP: '10.0.0.100',
+        SIZE: 10,
+      },
+      {
+        TYPE: 'IP4',
+        IP: '192.168.1.0',
+        SIZE: 10,
+      },
+    ],
   },
 }
 ```
