@@ -34,17 +34,23 @@ if node['opennebula_ng']['active']
       block do
         tempfile.write(%(NAME = "#{name}"\n))
         config.each do |key, value|
-          if value.is_a?(Hash)
-            # If value is a hash, add a KEY=[] block
+
+          # Items might be specified multiple times.
+          # This is currenlty only used by AR
+          [value].flatten.each do |v|
+
+            # If v is a hash, add a KEY=[] block
             # This is currently only used by AR
-            tempfile.write("#{key.upcase}=[\n")
-            lines = []
-            value.each { |k, v| lines << %(  #{k.upcase} = "#{v}") }
-            tempfile.write(lines.join(",\n"))
-            tempfile.write("\n]\n")
-          else
-            Array(value).each do |v|
-              tempfile.write(%(#{key.upcase} = "#{v}"\n))
+            if v.is_a?(Hash)
+              tempfile.write("#{key.upcase}=[\n")
+              lines = []
+              v.each { |k, v| lines << %(  #{k.upcase} = "#{v}") }
+              tempfile.write(lines.join(",\n"))
+              tempfile.write("\n]\n")
+            else
+              Array(value).each do |v|
+                tempfile.write(%(#{key.upcase} = "#{v}\n"))
+              end
             end
           end
         end
