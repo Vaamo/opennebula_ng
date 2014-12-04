@@ -1,3 +1,8 @@
+4.10.1
+------
+
+- Allow multiple ARs (address-ranges) in virtual network configuration
+
 4.10.0
 ------
 
