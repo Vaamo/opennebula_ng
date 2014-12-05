@@ -34,7 +34,7 @@ end
 # Network configuration, according to attributes
 template '/etc/network/interfaces' do
   owner 'root'
-  group 'root'
+  group node['root_group']
   mode 00644
   source 'interfaces.erb'
   variables interfaces: node['opennebula_ng']['interfaces']
