@@ -21,29 +21,30 @@
 # Make sure it's installed
 package 'opennebula'
 
+service 'opennebula' do
+  # Enable service on active nodes
+  action :enable if node['opennebula_ng']['active']
+end
+
 # Configure OpenNebula to use MariaDB
 # Exchange DB = [] configuration in /etc/one/oned.conf with settings in attributes
 #
 # TODO: Somehow the regex doesn't match multiline expressions, even when using /m
-oned_conf = Chef::Util::FileEdit.new('/etc/one/oned.conf')
-oned_conf.search_file_replace_line(/^\s*DB\s*=\s*\[.*?\]/m, %(DB = [ backend = "mysql",
-  server  = "#{node['opennebula_ng']['mysql']['server']}",
-  port    = #{node['opennebula_ng']['mysql']['port']},
-  user    = "#{node['opennebula_ng']['mysql']['user']}",
-  passwd  = "#{node['opennebula_ng']['mysql']['passwd']}",
-  db_name = "#{node['opennebula_ng']['mysql']['db_name']}" ]
-))
-oned_conf.write_file
+oned_conf = nil
+ruby_block 'Edit oned.conf' do
+  block do
+    oned_conf = Chef::Util::FileEdit.new('/etc/one/oned.conf')
+    oned_conf.search_file_replace_line(/^\s*DB\s*=\s*\[.*?\]/m, %(DB = [ backend = "mysql",
+      server  = "#{node['opennebula_ng']['mysql']['server']}",
+      port    = #{node['opennebula_ng']['mysql']['port']},
+      user    = "#{node['opennebula_ng']['mysql']['user']}",
+      passwd  = "#{node['opennebula_ng']['mysql']['passwd']}",
+      db_name = "#{node['opennebula_ng']['mysql']['db_name']}" ]
+    ))
+    oned_conf.write_file
 
-service 'opennebula' do
-  # Disable service by default (on passive nodes)
-  action = :disable
-
-  # Enable service on active nodes, restart service if config file was changed
-  if node['opennebula_ng']['active']
-    action = :enable
-    action = [:enable, :restart] if oned_conf.file_edited?
+    # Notify opennebula service if the file was changed
+    self.notifies :restart, 'service[opennebula]' if oned_conf.file_edited?
   end
-
-  action action
 end
+
