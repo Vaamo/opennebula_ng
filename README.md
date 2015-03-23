@@ -41,7 +41,7 @@ You should be able to connect to your new OpenNebula installation using `http://
 
 ### default
 
-The default recpe just includes the `apt_repository` recipe
+The default recipe just includes the `apt_repository` recipe
 
 
 ### apt\_repository
