@@ -23,9 +23,9 @@ apt_repository 'opennebula' do
   case node['platform']
   when 'debian'
     # We need the mayor release number (e.g. 7)
-    uri "http://downloads.opennebula.org/repo/4.10/Debian/#{node['lsb']['release'].to_i}"
+    uri "http://downloads.opennebula.org/repo/4.12/Debian/#{node['lsb']['release'].to_i}"
   when 'ubuntu'
-    uri "http://downloads.opennebula.org/repo/4.10/Ubuntu/#{node['lsb']['release']}"
+    uri "http://downloads.opennebula.org/repo/4.12/Ubuntu/#{node['lsb']['release']}"
   else
     Chef::Log.fatal!("Your platform (#{node['platform']}) is not supported.")
   end
