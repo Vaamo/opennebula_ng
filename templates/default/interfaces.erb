@@ -9,15 +9,17 @@ auto lo
 iface lo inet loopback
 
 # Opennebula bridges
-<% @interfaces.each do |interface, c| %>
-<%# Duplicate config, as it is read only %>
-<% config = c.dup %>
-
-auto <%= interface %>
-iface <%= interface %> <%= config.delete('type') %>
-<% config.each do |key, value| %>
-  <% if key && !value.nil? %>
+<% @interfaces.each do |iface, protocols| %>
+  <% protocols.each do |proto, c| %>
+    <%# Duplicate config, as it is read only %>
+    <% config = c.dup %>
+auto <%= iface %>
+iface <%= iface %> <%= proto %> <%= config.delete('type') %>
+    <% config.each do |key, value| %>
+      <% if key && !value.nil? %>
     <%= key %> <%= value %>
+      <% end -%>
+    <% end -%>
+
   <% end -%>
 <% end -%>
-<% end %>
