@@ -12,12 +12,12 @@ A cookbook for managing [OpenNebula](http://opennebula.org/) via the Chef config
 To setup a minimal configuration, standalone OpenNebula server, set the following attributes to configure your network
 
 ```ruby
-node['opennebula_ng']['interfaces']['br0']['type'] = 'inet static'
-node['opennebula_ng']['interfaces']['br0']['address'] = '192.168.1.100'
-node['opennebula_ng']['interfaces']['br0']['network'] = '192.168.1.0'
-node['opennebula_ng']['interfaces']['br0']['netmask'] = '255.255.255.0'
-node['opennebula_ng']['interfaces']['br0']['broadcast'] = '192.168.1.255'
-node['opennebula_ng']['interfaces']['br0']['gateway'] = '192.168.1.1'
+node['opennebula_ng']['interfaces']['br0']['inet']['type'] = 'inet'
+node['opennebula_ng']['interfaces']['br0']['inet']['address'] = '192.168.1.100'
+node['opennebula_ng']['interfaces']['br0']['inet']['network'] = '192.168.1.0'
+node['opennebula_ng']['interfaces']['br0']['inet']['netmask'] = '255.255.255.0'
+node['opennebula_ng']['interfaces']['br0']['inet']['broadcast'] = '192.168.1.255'
+node['opennebula_ng']['interfaces']['br0']['inet']['gateway'] = '192.168.1.1'
 ```
 
 And run the following recipes:
@@ -71,35 +71,43 @@ wrapper cookbooks attribute dir, e.g. `attributes/myhost1.rb`)
 
 ```ruby
 if node.name == 'myhost1'
-  node['opennebula_ng']['interfaces']['br0']['type'] = 'inet static'
-  node['opennebula_ng']['interfaces']['br0']['address'] = '192.168.1.100'
-  node['opennebula_ng']['interfaces']['br0']['network'] = '192.168.1.0'
-  node['opennebula_ng']['interfaces']['br0']['netmask'] = '255.255.255.0'
-  node['opennebula_ng']['interfaces']['br0']['broadcast'] = '192.168.1.255'
-  node['opennebula_ng']['interfaces']['br0']['gateway'] = '192.168.1.1'
+  node['opennebula_ng']['interfaces']['br0']['inet']['type'] = 'static'
+  node['opennebula_ng']['interfaces']['br0']['inet']['address'] = '192.168.1.100'
+  node['opennebula_ng']['interfaces']['br0']['inet']['network'] = '192.168.1.0'
+  node['opennebula_ng']['interfaces']['br0']['inet']['netmask'] = '255.255.255.0'
+  node['opennebula_ng']['interfaces']['br0']['inet']['broadcast'] = '192.168.1.255'
+  node['opennebula_ng']['interfaces']['br0']['inet']['gateway'] = '192.168.1.1'
 
-  node['opennebula_ng']['interfaces']['br0']['bridge_ports'] = 'eth0'
-  node['opennebula_ng']['interfaces']['br0']['bridge_fd'] = 9
-  node['opennebula_ng']['interfaces']['br0']['bridge_hello'] = 2
-  node['opennebula_ng']['interfaces']['br0']['bridge_maxage'] = 12
-  node['opennebula_ng']['interfaces']['br0']['bridge_stp'] = 'off'
+  node['opennebula_ng']['interfaces']['br0']['inet']['bridge_ports'] = 'eth0'
+  node['opennebula_ng']['interfaces']['br0']['inet']['bridge_fd'] = 9
+  node['opennebula_ng']['interfaces']['br0']['inet']['bridge_hello'] = 2
+  node['opennebula_ng']['interfaces']['br0']['inet']['bridge_maxage'] = 12
+  node['opennebula_ng']['interfaces']['br0']['inet']['bridge_stp'] = 'off'
 end
 ```
 
 You can also configure additional interfaces, if required
 
 ```ruby
-node['opennebula_ng']['interfaces']['br1']['type'] = 'inet static'
-node['opennebula_ng']['interfaces']['br1']['address'] = '10.0.0.100'
-node['opennebula_ng']['interfaces']['br1']['network'] = '10.0.0.0'
-node['opennebula_ng']['interfaces']['br1']['netmask'] = '255.255.255.0'
-node['opennebula_ng']['interfaces']['br1']['broadcast'] = '10.0.0.255'
+node['opennebula_ng']['interfaces']['br1']['inet']['type'] = 'static'
+node['opennebula_ng']['interfaces']['br1']['inet']['address'] = '10.0.0.100'
+node['opennebula_ng']['interfaces']['br1']['inet']['network'] = '10.0.0.0'
+node['opennebula_ng']['interfaces']['br1']['inet']['netmask'] = '255.255.255.0'
+node['opennebula_ng']['interfaces']['br1']['inet']['broadcast'] = '10.0.0.255'
 
-node['opennebula_ng']['interfaces']['br1']['bridge_ports'] = 'eth1'
-node['opennebula_ng']['interfaces']['br1']['bridge_fd'] = 9
-node['opennebula_ng']['interfaces']['br1']['bridge_hello'] = 2
-node['opennebula_ng']['interfaces']['br1']['bridge_maxage'] = 12
-node['opennebula_ng']['interfaces']['br1']['bridge_stp'] = 'off'
+node['opennebula_ng']['interfaces']['br1']['inet']['bridge_ports'] = 'eth1'
+node['opennebula_ng']['interfaces']['br1']['inet']['bridge_fd'] = 9
+node['opennebula_ng']['interfaces']['br1']['inet']['bridge_hello'] = 2
+node['opennebula_ng']['interfaces']['br1']['inet']['bridge_maxage'] = 12
+node['opennebula_ng']['interfaces']['br1']['inet']['bridge_stp'] = 'off'
+```
+
+Since version 4.12.1, ipv6 is also supported:
+
+```ruby
+node['opennebula_ng']['interfaces']['br0']['inet6']['type'] = 'static'
+node['opennebula_ng']['interfaces']['br0']['inet6']['address'] = 'fcc1:cafe:bee1:dead::1'
+node['opennebula_ng']['interfaces']['br0']['inet6']['network'] = 64
 ```
 
 ### mariadb\_server
