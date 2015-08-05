@@ -1,3 +1,23 @@
+4.12.1
+------
+
+- **BREAKING CHANGE:** Add support for ipv6. Network configuration adaption required!
+
+```ruby
+# Change
+node['opennebula_ng']['interfaces']['br0']['type'] = 'inet static'
+node['opennebula_ng']['interfaces']['br0']['address'] = '192.168.1.100'
+
+# To:
+node['opennebula_ng']['interfaces']['br0']['inet']['type'] = 'static'
+node['opennebula_ng']['interfaces']['br0']['inet']['address'] = '192.168.1.100'
+```
+
+4.12.0
+------
+
+- Update default OpenNebula version to `4.12.0`
+
 4.10.1
 ------
 
