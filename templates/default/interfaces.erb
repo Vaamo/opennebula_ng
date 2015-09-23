@@ -11,6 +11,8 @@ iface lo inet loopback
 # Opennebula bridges
 <% @interfaces.each do |iface, protocols| %>
   <% protocols.each do |proto, c| %>
+    <%# Skip if no ip address is set %>
+    <% next unless c['address'] %>
     <%# Duplicate config, as it is read only %>
     <% config = c.dup %>
 auto <%= iface %>
