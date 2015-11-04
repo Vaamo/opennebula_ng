@@ -1,3 +1,8 @@
+4.14.1
+------
+
+- Update default OpenNebula version to `4.14`
+
 4.12.1
 ------
 
